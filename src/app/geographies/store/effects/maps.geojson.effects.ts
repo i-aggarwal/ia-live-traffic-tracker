@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { GeojsonService, cities } from '../../services/geojson.service';
+import { GeojsonService } from '../../services/geojson.service';
 import { fromGeoJson } from '../actions';
 import 'rxjs/add/observable/of';
 import { FeatureCollection, GeometryObject, GeoJsonProperties } from 'geojson';
@@ -14,23 +14,43 @@ import { FeatureCollection, GeometryObject, GeoJsonProperties } from 'geojson';
 export class GeoJsonEffects {
   constructor(private geojsonService: GeojsonService, private actions$: Actions) {}
 
-  // @Effect()
-  // getUsage$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD).switchMap(payload => {
-  //   return this.geojsonService.getGeojsons(cities.SFO).map((geoJsons: Array<Observable<any>>) => {
-  //     return new fromGeoJson.LoadSuccessAction(geoJsons);
-  //   });
-  // });
-
   @Effect()
   getFreeWays$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
-  .map((action: fromGeoJson.LoadFreewayAction) => action.payload)
+  .map((action: fromGeoJson.LoadFreewaysAction) => action.payload)
   .switchMap(payload => {
     return this.geojsonService.getFreeWays(payload)
     .map((freeWay: FeatureCollection<GeometryObject, GeoJsonProperties>) => {
-      return new fromGeoJson.LoadFreewaySuccessAction({city: payload, freewayGeoJson: freeWay});
+      return new fromGeoJson.LoadFreewaysSuccessAction({place: payload, geoJson: freeWay});
     });
   });
 
   @Effect()
-  getUSGeoJson$: Observable<Action> = this.actions$.ofType()
+  getArtries$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
+  .map((action: fromGeoJson.LoadArtriesAction) => action.payload)
+  .switchMap(payload => {
+    return this.geojsonService.getArtries(payload)
+    .map((artries: FeatureCollection<GeometryObject, GeoJsonProperties>) => {
+      return new fromGeoJson.LoadArtriesSuccessAction({place: payload, geoJson: artries});
+    });
+  });
+
+  @Effect()
+  getStreets$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
+  .map((action: fromGeoJson.LoadStreetsAction) => action.payload)
+  .switchMap(payload => {
+    return this.geojsonService.getStreets(payload)
+    .map((streets: FeatureCollection<GeometryObject, GeoJsonProperties>) => {
+      return new fromGeoJson.LoadStreetsSuccessAction({place: payload, geoJson: streets});
+    });
+  });
+
+  @Effect()
+  getNeighborhoods$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
+  .map((action: fromGeoJson.LoadNeighborhoodsAction) => action.payload)
+  .switchMap(payload => {
+    return this.geojsonService.getNeighborhoods(payload)
+    .map((neighborhoods: FeatureCollection<GeometryObject, GeoJsonProperties>) => {
+      return new fromGeoJson.LoadNeighborhoodsSuccessAction({place: payload, geoJson: neighborhoods});
+    });
+  });
 }
