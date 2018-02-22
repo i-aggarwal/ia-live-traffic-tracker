@@ -36,15 +36,19 @@ export const getAllRouteDetails = (routeState: RouteState) => {
   });
 };
 export const getAllRouteConfig = (routeState: RouteState) => {
-  return Object.keys(routeState || {}).map((key: string) => {
-    return routeState[key].routesConfig;
+  const routeConfig: {[key: string]: RouteConfig} = {};
+  Object.keys(routeState || {}).forEach((key: string) => {
+    routeConfig[key] = routeState[key].routesConfig;
   });
-};
 
+  return routeConfig;
+};
 export const getAllVehicleLocations = (routeState: RouteState) => {
-  return Object.keys(routeState || {}).map((key: string) => {
-    return routeState[key].vehicleLocation;
+  const vehicleLocations: {[key: string]: Array<VehicleLocation>} = {};
+  Object.keys(routeState || {}).forEach((key: string) => {
+    vehicleLocations[key] = routeState[key].vehicleLocation;
   });
+  return vehicleLocations;
 };
 
 export function reducer(state: LiveTrafficState = initialSate, action: fromLiveTraffic.Actions): LiveTrafficState {

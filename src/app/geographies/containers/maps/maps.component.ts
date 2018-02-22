@@ -6,6 +6,9 @@ import * as fromGeo from '../../store/reducers';
 import * as actions from '../../store/actions';
 import { Places } from '../../services/models/places.models';
 import { Route, RouteConfig } from '../../../live-trafic/services/models/live-traffic.models';
+import * as liveTrafficAction from '../../../live-trafic/store/actions';
+import * as fromLiveTrafficReducer from '../../../live-trafic/store/reducers';
+
 
 @Component({
   selector: 'app-maps',
@@ -27,6 +30,8 @@ export class MapsComponent implements OnInit {
   streets$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
   artries$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
   neighborhoods$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
+  routes$: Observable<Array<Route>>;
+  routesConfig$: Observable<{[key: string]: RouteConfig}>;
 
   constructor(public store: Store<any>) {}
 
@@ -35,6 +40,8 @@ export class MapsComponent implements OnInit {
     this.streets$ = this.store.select(fromGeo.getStreets(this.city));
     this.artries$ = this.store.select(fromGeo.getArtries(this.city));
     this.neighborhoods$ = this.store.select(fromGeo.getNeighborhood(this.city));
+    this.routes$ = this.store.select(fromLiveTrafficReducer.getAllRouteDetails(this.agency));
+    this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getAllRouteConfig(this.agency));
 
     this.store.dispatch(new actions.fromGeoJson.LoadFreewaysAction(this.city));
     this.store.dispatch(new actions.fromGeoJson.LoadArtriesAction(this.city));

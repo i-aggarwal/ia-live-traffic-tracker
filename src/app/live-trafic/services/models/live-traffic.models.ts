@@ -27,8 +27,8 @@ export interface Stop {
 }
 
 export interface Point {
-  lon: string;
-  lat: string;
+  lon: number;
+  lat: number;
 }
 
 export interface Path {

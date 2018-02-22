@@ -3,7 +3,7 @@ import * as d3Geo from 'd3-geo';
 import * as d3Selection from 'd3-selection';
 import { BaseType, Selection, Path } from 'd3';
 
-export abstract class MapsBaseComponent implements OnInit {
+export abstract class MapsBaseComponent implements AfterViewInit {
   private width = 1500;
   private height = 625;
   protected svg: Selection<BaseType, {}, HTMLElement, any>;
@@ -13,7 +13,7 @@ export abstract class MapsBaseComponent implements OnInit {
 
   constructor(protected elementRef: ElementRef) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.svg = this.initSvg();
     this.projections = this.getProjections();
     this.path = this.getPath();

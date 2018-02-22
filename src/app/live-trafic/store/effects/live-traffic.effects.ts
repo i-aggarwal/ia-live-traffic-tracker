@@ -92,7 +92,9 @@ export class LivetrafficEffects {
     .ofType(fromLiveTraffic.LOAD_VEHICLE_LOCATION_FOR_AGENCY)
     .map((action: fromLiveTraffic.LoadVehicleLocationForAgencyAction) => action.payload)
     .switchMap((payload: LoadVehicleLocationForAgencyPayloadType) => {
-      return this.liveTrafficService
+      return Observable.interval(15000)
+      .switchMap(() => {
+        return this.liveTrafficService
         .getVehicleLocation(payload.agencyTag, undefined, payload.epochTime || (new Date().getTime() + ''))
         .map((vehicleLocation: VehicleLocationApiResponse) => {
           return new fromLiveTraffic.LoadVehicleLocationForAgencySuccessAction({
@@ -100,5 +102,6 @@ export class LivetrafficEffects {
             vehicleLocation: vehicleLocation.vehicle
           });
         });
+      });
     });
 }

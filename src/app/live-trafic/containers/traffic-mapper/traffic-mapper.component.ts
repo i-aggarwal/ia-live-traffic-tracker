@@ -12,7 +12,6 @@ import { RouteConfig, VehicleLocation } from '../../services/models/live-traffic
 export class TrafficMapperComponent implements OnInit {
   @Input() agency = 'sf-muni';
   @Input() route: string;
-  @Input() routesConfig: Array<RouteConfig>;
   @Input() vehicleLocations: Array<VehicleLocation>;
   constructor(private store: Store<any>) {}
   ngOnInit(): void {}

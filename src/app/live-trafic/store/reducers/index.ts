@@ -23,3 +23,7 @@ export function getAllRouteDetails(agencyTag: string) {
 export function getAllRouteConfig(agencyTag: string) {
   return createSelector(getRoutesByAgency(agencyTag), fromLiveTracker.getAllRouteConfig);
 }
+
+export function getAllVehicleLocations(agencyTag: string) {
+  return createSelector(getRoutesByAgency(agencyTag), fromLiveTracker.getAllVehicleLocations);
+}
