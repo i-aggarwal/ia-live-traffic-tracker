@@ -1,82 +1,39 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Geo from 'd3-geo';
 import * as d3Selection from 'd3-selection';
 import { BaseType, Selection, Path } from 'd3';
+import { LiveTraffic } from './live-trafic/services/live-trafic.service';
+import { Observable } from 'rxjs/Observable';
+import { Route, RouteConfig } from './live-trafic/services/models/live-traffic.models';
+import { Store } from '@ngrx/store';
+import * as liveTrafficAction from './live-trafic/store/actions';
+import * as fromLiveTrafficReducer from './live-trafic/store/reducers';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit {
   title = 'app';
-  private width = 1500;
-  private height = 625;
-  private svg: Selection<BaseType, {}, HTMLElement, any>;
-  private projections: d3Geo.GeoProjection;
-  private path: d3Geo.GeoPath<any, any>;
-  private group: Selection<BaseType, {}, HTMLElement, any>;
-  private features: Array<Object> = [];
-  private sfo;
+  routesForAgency$: Observable<Array<Route>>;
+  routesConfigForAgency$: Observable<Array<RouteConfig>>;
+  agency = 'sf-muni';
 
-  constructor(private elementRef: ElementRef) {
-    const jsonA = require('./assets/geoJsons/arteries.json');
-    const jsonF = require('./assets/geoJsons/freeways.json');
-    const jsonN = require('./assets/geoJsons/neighborhoods.json');
-    const jsonS = require('./assets/geoJsons/streets.json');
+  constructor(public store: Store<any>) {}
 
-    this.sfo = jsonN;
-    this.features = this.sfo.features;
-  }
+  ngOnInit() {
+    this.routesForAgency$ = this.store.select(fromLiveTrafficReducer.getAllRouteDetails(this.agency));
+    this.routesConfigForAgency$ = this.store.select(fromLiveTrafficReducer.getAllRouteConfig(this.agency));
 
-  ngAfterViewInit() {
-    // this.renderMap();
-  }
-
-  private renderMap() {
-    this.svg = d3
-      .select(this.elementRef.nativeElement)
-      .append('svg')
-      .attr('width', this.width)
-      .attr('height', this.height);
-
-    this.group = this.svg.append('g');
-
-    this.projections = d3Geo
-      .geoMercator()
-      .scale(1)
-      .translate([0, 0])
-      .precision(0);
-
-    this.path = d3Geo.geoPath().projection(this.projections);
-
-    // TODO: Ishan - Check how this works!
-    const bounds = this.path.bounds(this.sfo);
-    const xScale = this.width / Math.abs(bounds[1][0] - bounds[0][0]);
-    const yScale = this.height / Math.abs(bounds[1][1] - bounds[0][1]);
-    const scale = xScale < yScale ? xScale : yScale;
-    const transl = [
-      (this.width - scale * (bounds[1][0] + bounds[0][0])) / 2,
-      (this.height - scale * (bounds[1][1] + bounds[0][1])) / 2
-    ];
-    // TODO: Ishan - Check how this works!
-
-    this.projections
-      .scale(scale)
-      .translate([
-        (this.width - scale * (bounds[1][0] + bounds[0][0])) / 2,
-        (this.height - scale * (bounds[1][1] + bounds[0][1])) / 2
-      ]);
-
-    this.group
-      .selectAll('path')
-      .data(this.features)
-      .enter()
-      .append('path')
-      .attr('d', this.path)
-      .style('fill', '#FB5B1F')
-      .style('stroke', '#ffffff')
-      .style('stroke-width', '1px');
+    this.store.dispatch(new liveTrafficAction.fromLiveTraffic.LoadAllRouteConfigAction({ agencyTag: this.agency }));
+    this.store.dispatch(new liveTrafficAction.fromLiveTraffic.LoadRoutesAction({ agencyTag: this.agency }));
+    this.store.dispatch(
+      new liveTrafficAction.fromLiveTraffic.LoadVehicleLocationForAgencyAction({
+        agencyTag: this.agency,
+        epochTime: new Date().getTime() - 10 * 1000 + ''
+      })
+    );
   }
 }
