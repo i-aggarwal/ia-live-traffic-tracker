@@ -25,7 +25,7 @@ export class GeoJsonEffects {
   });
 
   @Effect()
-  getArtries$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
+  getArtries$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_ARTRIES)
   .map((action: fromGeoJson.LoadArtriesAction) => action.payload)
   .switchMap(payload => {
     return this.geojsonService.getArtries(payload)
@@ -35,7 +35,7 @@ export class GeoJsonEffects {
   });
 
   @Effect()
-  getStreets$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
+  getStreets$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_STREETS)
   .map((action: fromGeoJson.LoadStreetsAction) => action.payload)
   .switchMap(payload => {
     return this.geojsonService.getStreets(payload)
@@ -45,7 +45,7 @@ export class GeoJsonEffects {
   });
 
   @Effect()
-  getNeighborhoods$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_FREEWAYS)
+  getNeighborhoods$: Observable<Action> = this.actions$.ofType(fromGeoJson.LOAD_NEIGHBORHOODS)
   .map((action: fromGeoJson.LoadNeighborhoodsAction) => action.payload)
   .switchMap(payload => {
     return this.geojsonService.getNeighborhoods(payload)
