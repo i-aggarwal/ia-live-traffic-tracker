@@ -6,13 +6,15 @@ import { reducers } from '../../store/reducers';
 import { effects } from '../../store/effects';
 import { TrafficMapperComponent } from './traffic-mapper.component';
 import { MapsModule } from '../../../geographies/containers/maps/maps.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     StoreModule.forFeature('live-traffic', reducers),
     EffectsModule.forFeature(effects),
-    MapsModule
+    MapsModule,
+    ReactiveFormsModule
   ],
   declarations: [TrafficMapperComponent],
   exports: [TrafficMapperComponent],

@@ -1,4 +1,4 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class='container'>
-  <app-traffic-mapper [place]="place" [routeConfig]="routesConfig$ | async"></app-traffic-mapper>
+  <app-traffic-mapper [place]="place" [routeConfig]="routesConfig$ | async" [routeDetails]="routes$ | async" (selectedRoute)="selectedRoute($event)"></app-traffic-mapper>
 </div>

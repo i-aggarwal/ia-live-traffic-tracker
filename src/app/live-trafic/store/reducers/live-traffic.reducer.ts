@@ -26,10 +26,11 @@ export const initialSate: LiveTrafficState = {
 
 export const getRoutesByAgency = (agencyTag: string) => (state: LiveTrafficState) => state[agencyTag].routes;
 export const getRoutesConfigByRoute = (routeTag: string) => (routeState: RouteState) => {
-  return { routeTag: routeState[routeTag].routesConfig };
+  return { [routeTag]: routeState[routeTag].routesConfig };
 };
-export const getVehicleLocationByRoute = (routeTag: string) => (routeState: RouteState) =>
-  routeState[routeTag].vehicleLocation;
+export const getVehicleLocationByRoute = (routeTag: string) => (routeState: RouteState) => {
+  return routeState[routeTag].vehicleLocation;
+};
 export const getRoutesDetailByRoute = (routeTag: string) => (routeState: RouteState) => routeState[routeTag].details;
 export const getAllRouteDetails = (routeState: RouteState) => {
   return Object.keys(routeState || {}).map((key: string) => {

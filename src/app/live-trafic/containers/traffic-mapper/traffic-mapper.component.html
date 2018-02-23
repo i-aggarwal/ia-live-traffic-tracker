@@ -1,1 +1,14 @@
-<app-maps [city]="place"></app-maps>
+<div class="container">
+    <div class="form-container">
+        <form [formGroup]="form">
+            <select formControlName="route">
+              <option value="">Select</option>
+              <option ngValue="All">All</option>
+              <option *ngFor="let route of routeDetails" [ngValue]="route.tag">
+                {{route.title }}
+              </option>
+          </select>
+        </form>
+    </div>
+    <app-maps class="map-container" [city]="place"></app-maps>
+</div>

@@ -19,8 +19,8 @@ export class GeojsonService {
     };
   } = {
     SFO: {
-      width: 800,
-      height: 700
+      width: 600,
+      height: 600
     }
   };
 

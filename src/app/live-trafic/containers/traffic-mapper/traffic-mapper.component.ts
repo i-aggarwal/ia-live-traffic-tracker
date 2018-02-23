@@ -5,7 +5,9 @@ import {
   Input,
   AfterViewInit,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { fromLiveTraffic } from '../../store/actions';
@@ -17,6 +19,7 @@ import * as d3Geo from 'd3-geo';
 import { Observable } from 'rxjs/Observable';
 import { BaseType, Selection } from 'd3';
 import * as fromLiveTrafficReducer from '../../store/reducers';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-traffic-mapper',
@@ -29,13 +32,17 @@ export class TrafficMapperComponent implements AfterViewInit, OnInit, OnChanges 
   @Input() route: string;
   @Input() place: Places;
   @Input() routeConfig: { [key: string]: RouteConfig };
-  @Input() routeDetails: { [key: string]: Route };
+  @Input() routeDetails: Array<Route>;
+
+  @Output() selectedRoute = new EventEmitter<string>();
 
   private projections: d3Geo.GeoProjection;
   private svg: Selection<BaseType, {}, HTMLElement, any>;
   private vehicleLocation$: Observable<Array<VehicleLocation>>;
+  private form: FormGroup;
+  private routeTags: Array<string>;
 
-  constructor(private store: Store<any>) {}
+  constructor(private store: Store<any>, private _fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges) {
     this.projections = this.projections || GeojsonService.getProjections(this.place);
@@ -51,6 +58,13 @@ export class TrafficMapperComponent implements AfterViewInit, OnInit, OnChanges 
 
   ngOnInit() {
     this.projections = GeojsonService.getProjections(this.place);
+    this.form = this._fb.group({
+      route: ['']
+    });
+
+    this.form.valueChanges.subscribe(newFormValue => {
+      return this.selectedRoute.emit(newFormValue.route);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -60,15 +74,20 @@ export class TrafficMapperComponent implements AfterViewInit, OnInit, OnChanges 
   drawRoutes() {
     // getVehileLocationForRoute
     if (this.routeConfig) {
+      const routeGroupSelection = this.svg.select('g#routesGroup');
+      if (!routeGroupSelection.empty()) {
+        routeGroupSelection.remove();
+      }
+      const containerGroup = this.svg.append('g').attr('id', 'routesGroup');
       Object.keys(this.routeConfig).forEach((tag: string) => {
         const route = this.routeConfig[tag];
         if (route) {
-          const selection = this.svg.select('g#route_' + route.tag);
+          const selection = containerGroup.select('g#route_' + route.tag);
           if (!selection.empty()) {
             selection.remove();
           }
           const allPaths = route.path;
-          const svgGroup = this.svg.append('g').attr('id', 'route_' + route.tag);
+          const svgGroup = containerGroup.append('g').attr('id', 'route_' + route.tag);
 
           allPaths.forEach((path, index) => {
             const links = [];

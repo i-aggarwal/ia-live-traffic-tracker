@@ -51,4 +51,12 @@ export class AppComponent implements OnInit {
       })
     );
   }
+
+  selectedRoute(routeTag: string) {
+    if (routeTag === 'All') {
+      this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getAllRouteConfig(this.agency));
+    } else {
+      this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getRoutesConfigForAgency(this.agency, routeTag));
+    }
+  }
 }
