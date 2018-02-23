@@ -1,0 +1,20 @@
+:host {
+  $base-padding: 15px;
+
+  .app-map-builder {
+    display: flex;
+    flex-direction: row;
+
+    .form-container {
+      flex: 0 1 20vw;
+      border: 1px solid red;
+    }
+    .map-container {
+      flex: 0 1 auto;
+      border: 1px dashed green;
+      .map-svg {
+        margin: $base-padding 0 $base-padding 0;
+      }
+    }
+  }
+}
