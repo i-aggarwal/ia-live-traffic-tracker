@@ -1,4 +1,4 @@
 <div>
-  <app-sfo [freeways]="freeways$|async" [artries]="artries$|async" [neighborhoods]="neighborhoods$|async" [streets]="streets$|async"
-    [routeConfig]="routesConfig$|async"></app-sfo>
+  <app-map-builder [neighborhoods]="neighborhoods$|async"
+    [place]="city"></app-map-builder>
 </div>

@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SfoModule } from './sfo/sfo.module';
+import { MapBuilderComponent } from './maps.component';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [],
-  exports: [SfoModule]
+  imports: [CommonModule],
+  declarations: [MapBuilderComponent],
+  exports: [MapBuilderComponent]
 })
-export class MapModule { }
+export class MapModule {}

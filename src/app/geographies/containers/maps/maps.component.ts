@@ -18,34 +18,21 @@ import * as fromLiveTrafficReducer from '../../../live-trafic/store/reducers';
 })
 export class MapsComponent implements OnInit {
   @Input()
-  city: Places = {
-    id: 'sfo',
-    name: 'San Francisco'
-  };
-
+  city: Places;
   @Input()
   agency = 'sf-muni';
 
-  freeways$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
-  streets$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
-  artries$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
+  // freeways$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
+  // streets$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
+  // artries$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
   neighborhoods$: Observable<FeatureCollection<GeometryObject, GeoJsonProperties>>;
-  routes$: Observable<Array<Route>>;
-  routesConfig$: Observable<{[key: string]: RouteConfig}>;
 
   constructor(public store: Store<any>) {}
 
   ngOnInit() {
-    this.freeways$ = this.store.select(fromGeo.getFreeways(this.city));
-    this.streets$ = this.store.select(fromGeo.getStreets(this.city));
-    this.artries$ = this.store.select(fromGeo.getArtries(this.city));
+    // this.freeways$ = this.store.select(fromGeo.getFreeways(this.city));
+    // this.streets$ = this.store.select(fromGeo.getStreets(this.city));
+    // this.artries$ = this.store.select(fromGeo.getArtries(this.city));
     this.neighborhoods$ = this.store.select(fromGeo.getNeighborhood(this.city));
-    this.routes$ = this.store.select(fromLiveTrafficReducer.getAllRouteDetails(this.agency));
-    this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getAllRouteConfig(this.agency));
-
-    this.store.dispatch(new actions.fromGeoJson.LoadFreewaysAction(this.city));
-    this.store.dispatch(new actions.fromGeoJson.LoadArtriesAction(this.city));
-    this.store.dispatch(new actions.fromGeoJson.LoadStreetsAction(this.city));
-    this.store.dispatch(new actions.fromGeoJson.LoadNeighborhoodsAction(this.city));
   }
 }

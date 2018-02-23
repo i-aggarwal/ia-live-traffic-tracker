@@ -20,6 +20,7 @@ import {
   LoadAllRouteConfigPayloadType,
   LoadVehicleLocationForAgencyPayloadType
 } from '../actions/models/actions.models';
+import 'rxjs/add/observable/timer';
 
 @Injectable()
 export class LivetrafficEffects {
@@ -92,7 +93,7 @@ export class LivetrafficEffects {
     .ofType(fromLiveTraffic.LOAD_VEHICLE_LOCATION_FOR_AGENCY)
     .map((action: fromLiveTraffic.LoadVehicleLocationForAgencyAction) => action.payload)
     .switchMap((payload: LoadVehicleLocationForAgencyPayloadType) => {
-      return Observable.interval(15000)
+      return Observable.timer(0, 15000)
       .switchMap(() => {
         return this.liveTrafficService
         .getVehicleLocation(payload.agencyTag, undefined, payload.epochTime || (new Date().getTime() + ''))

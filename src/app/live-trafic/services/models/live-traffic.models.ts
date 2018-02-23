@@ -66,8 +66,8 @@ export interface RouteConfigApiResponse {
 
 export interface VehicleLocation {
   id: string;
-  lon: string;
-  lat: string;
+  lon: number;
+  lat: number;
   routeTag: string;
   predictable: string;
   speedKmHr: string;

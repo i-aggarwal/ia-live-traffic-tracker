@@ -10,6 +10,9 @@ import * as liveTrafficAction from './live-trafic/store/actions';
 import * as fromLiveTrafficReducer from './live-trafic/store/reducers';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/interval';
+import * as fromGeo from './geographies/store/reducers';
+import * as actions from './geographies/store/actions';
+import { Places } from './geographies/services/models/places.models';
 
 @Component({
   selector: 'app-root',
@@ -19,13 +22,26 @@ import 'rxjs/add/observable/interval';
 export class AppComponent implements OnInit {
   title = 'app';
   agency = 'sf-muni';
+  place: Places = {
+    id: 'SFO',
+    name: 'San Francisco'
+  };
 
   vehicleLocation$: Observable<{ [kay: string]: Array<VehicleLocation> }>;
+  routes$: Observable<Array<Route>>;
+  routesConfig$: Observable<{ [key: string]: RouteConfig }>;
+
   constructor(public store: Store<any>) {}
 
   ngOnInit() {
     this.vehicleLocation$ = this.store.select(fromLiveTrafficReducer.getAllVehicleLocations(this.agency));
+    this.routes$ = this.store.select(fromLiveTrafficReducer.getAllRouteDetails(this.agency));
+    this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getAllRouteConfig(this.agency));
 
+    // this.store.dispatch(new actions.fromGeoJson.LoadFreewaysAction(this.place));
+    // this.store.dispatch(new actions.fromGeoJson.LoadArtriesAction(this.place));
+    // this.store.dispatch(new actions.fromGeoJson.LoadStreetsAction(this.place));
+    this.store.dispatch(new actions.fromGeoJson.LoadNeighborhoodsAction(this.place));
     this.store.dispatch(new liveTrafficAction.fromLiveTraffic.LoadAllRouteConfigAction({ agencyTag: this.agency }));
     this.store.dispatch(new liveTrafficAction.fromLiveTraffic.LoadRoutesAction({ agencyTag: this.agency }));
     this.store.dispatch(

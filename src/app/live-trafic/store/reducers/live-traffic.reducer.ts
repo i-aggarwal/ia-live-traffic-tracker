@@ -25,8 +25,9 @@ export const initialSate: LiveTrafficState = {
 };
 
 export const getRoutesByAgency = (agencyTag: string) => (state: LiveTrafficState) => state[agencyTag].routes;
-export const getRoutesConfigByRoute = (routeTag: string) => (routeState: RouteState) =>
-  routeState[routeTag].routesConfig;
+export const getRoutesConfigByRoute = (routeTag: string) => (routeState: RouteState) => {
+  return { routeTag: routeState[routeTag].routesConfig };
+};
 export const getVehicleLocationByRoute = (routeTag: string) => (routeState: RouteState) =>
   routeState[routeTag].vehicleLocation;
 export const getRoutesDetailByRoute = (routeTag: string) => (routeState: RouteState) => routeState[routeTag].details;
@@ -36,7 +37,7 @@ export const getAllRouteDetails = (routeState: RouteState) => {
   });
 };
 export const getAllRouteConfig = (routeState: RouteState) => {
-  const routeConfig: {[key: string]: RouteConfig} = {};
+  const routeConfig: { [key: string]: RouteConfig } = {};
   Object.keys(routeState || {}).forEach((key: string) => {
     routeConfig[key] = routeState[key].routesConfig;
   });
@@ -44,7 +45,7 @@ export const getAllRouteConfig = (routeState: RouteState) => {
   return routeConfig;
 };
 export const getAllVehicleLocations = (routeState: RouteState) => {
-  const vehicleLocations: {[key: string]: Array<VehicleLocation>} = {};
+  const vehicleLocations: { [key: string]: Array<VehicleLocation> } = {};
   Object.keys(routeState || {}).forEach((key: string) => {
     vehicleLocations[key] = routeState[key].vehicleLocation;
   });
@@ -154,25 +155,38 @@ export function reducer(state: LiveTrafficState = initialSate, action: fromLiveT
     }
     case fromLiveTraffic.LOAD_VEHICLE_LOCATION_FOR_AGENCY_SUCCESS: {
       const AGENCY_TAG = action.payload.agencyTag;
-      let routes = {};
-      action.payload.vehicleLocation.forEach((vehicleLocations: VehicleLocation) => {
-        routes[vehicleLocations.routeTag] =
-          (state[AGENCY_TAG] && state[AGENCY_TAG].routes && state[AGENCY_TAG].routes[vehicleLocations.routeTag]) || {};
-        routes = {
-          ...routes,
-          [vehicleLocations.routeTag]: {
-            ...routes[vehicleLocations.routeTag],
-            vehicleLocation: vehicleLocations
+      const routes: RouteState = {};
+      let agencyState: AgencyState;
+
+      if (state[AGENCY_TAG]) {
+        agencyState = { ...state[AGENCY_TAG] };
+        action.payload.vehicleLocation.forEach((vehicleLocations: VehicleLocation) => {
+          // Ignoring vehicles for which there is no route
+          if (agencyState.routes && agencyState.routes[vehicleLocations.routeTag]) {
+            routes[vehicleLocations.routeTag] = routes[vehicleLocations.routeTag] || {
+              details: agencyState.routes[vehicleLocations.routeTag].details,
+              routesConfig: agencyState.routes[vehicleLocations.routeTag].routesConfig,
+              vehicleLocation: []
+            };
+            routes[vehicleLocations.routeTag].vehicleLocation = routes[
+              vehicleLocations.routeTag
+            ].vehicleLocation.concat([vehicleLocations]);
+          }
+        });
+
+        return {
+          ...state,
+          [AGENCY_TAG]: {
+            ...state[AGENCY_TAG],
+            routes: {
+              ...state[AGENCY_TAG].routes,
+              ...routes
+            }
           }
         };
-      });
-      return {
-        ...state,
-        [AGENCY_TAG]: {
-          ...state[AGENCY_TAG],
-          routes: routes
-        }
-      };
+      } else {
+        return state;
+      }
     }
     default:
       return state;
