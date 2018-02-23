@@ -1,5 +1,7 @@
 # ThousandEyes
 
+Run npm install - to install the dependencies.
+
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 # Scope of improvement
@@ -10,3 +12,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 4. Use heading from the nextBus vehicle locations to plot direction
 5. Add zoom functionality
 6. Better styling
+7. Test browser compatibility
+
+# Notes:
+1. Use Redux DevTools extension for chrome to debug the application 
