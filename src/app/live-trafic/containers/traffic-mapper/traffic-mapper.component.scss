@@ -1,0 +1,15 @@
+:host {
+  .container {
+    display: flex;
+    flex-direction: row;
+
+    .form-container {
+      flex: 1 0 30px;
+      border: 1px solid orange;
+    }
+    .map-container {
+      flex: 1 0;
+      border: 1px solid skyblue;
+    }
+  }
+}

@@ -19,8 +19,8 @@ export class GeojsonService {
     };
   } = {
     SFO: {
-      width: 800,
-      height: 700
+      width: 600,
+      height: 600
     }
   };
 
@@ -53,7 +53,6 @@ export class GeojsonService {
       (GeojsonService.cityMap[place.id].width - scale * (bounds[1][0] + bounds[0][0])) / 2,
       (GeojsonService.cityMap[place.id].height - scale * (bounds[1][1] + bounds[0][1])) / 2
     ];
-    // TODO: Ishan - Check how this works!
 
     GeojsonService.cityMap = {
       ...GeojsonService.cityMap,
@@ -70,7 +69,6 @@ export class GeojsonService {
   }
 
   getPlaces(): Observable<Array<Places>> {
-    // TODO: Ishan - Should be an API call that returns this data
     return Observable.of([
       {
         id: 'SFO',

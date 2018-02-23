@@ -11,11 +11,12 @@ import {
 import { GeoJsonObject, FeatureCollection, GeoJsonProperties, GeometryObject } from 'geojson';
 import * as d3 from 'd3';
 import { MapsBaseComponent } from './maps-base.component';
-import { RouteConfig } from '../../live-trafic/services/models/live-traffic.models';
+import { RouteConfig } from '../../../live-trafic/services/models/live-traffic.models';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/pairwise';
-import { GeojsonService } from '../../geographies/services/geojson.service';
-import { Places } from '../../geographies/services/models/places.models';
+import { GeojsonService } from '../../services/geojson.service';
+import { Places } from '../../services/models/places.models';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-map-builder',

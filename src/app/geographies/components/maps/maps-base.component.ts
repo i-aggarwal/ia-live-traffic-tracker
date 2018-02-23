@@ -2,8 +2,8 @@ import { OnInit, AfterViewInit, ElementRef, Input, ViewChild } from '@angular/co
 import * as d3Geo from 'd3-geo';
 import * as d3Selection from 'd3-selection';
 import { BaseType, Selection, Path } from 'd3';
-import { GeojsonService } from '../../geographies/services/geojson.service';
-import { Places } from '../../geographies/services/models/places.models';
+import { GeojsonService } from '../../services/geojson.service';
+import { Places } from '../../services/models/places.models';
 
 export abstract class MapsBaseComponent implements AfterViewInit, OnInit {
   protected svg: Selection<BaseType, {}, HTMLElement, any>;

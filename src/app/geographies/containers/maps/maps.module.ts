@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MapsComponent } from './maps.component';
-import { MapModule } from '../../../components/maps/maps.module';
+import { MapModule } from '../../components/maps/maps.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from '../../store/reducers';

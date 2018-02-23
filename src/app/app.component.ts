@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as d3 from 'd3';
 import * as d3Geo from 'd3-geo';
 import * as d3Selection from 'd3-selection';
@@ -17,7 +17,8 @@ import { Places } from './geographies/services/models/places.models';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
   title = 'app';
@@ -50,5 +51,13 @@ export class AppComponent implements OnInit {
         epochTime: new Date().getTime() - 10 * 1000 + ''
       })
     );
+  }
+
+  selectedRoute(routeTag: string) {
+    if (routeTag === 'All') {
+      this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getAllRouteConfig(this.agency));
+    } else {
+      this.routesConfig$ = this.store.select(fromLiveTrafficReducer.getRoutesConfigForAgency(this.agency, routeTag));
+    }
   }
 }
